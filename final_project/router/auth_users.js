@@ -52,7 +52,7 @@ regd_users.post("/login", (req,res) => {
 regd_users.put("/auth/review/:isbn", (req, res) => {
     const { isbn } = req.params;
     const { review } = req.body;
-    const username = req.session.username;
+    const username = req.body;
 
     if (!username) {
         return res.status(401).json({ message: "Unauthorized. Please log in." });
@@ -74,6 +74,28 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
         message: book.reviews[username] === review ? "Review posted successfully" : "Review updated successfully"
     });
 });
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+        // Extract email parameter from request URL
+        const { isbn } = req.params;
+        const { review } = req.body;
+        const username = req.body;
+        if (!username) {
+            return res.status(401).json({ message: "Unauthorized. Please log in." });
+        }
+    
+        if (!review) {
+            return res.status(400).json({ message: "Review text is required" });
+        }
+    
+        const book = books[isbn];
+        if (!book) {
+            return res.status(404).json({ message: "Book not found" });
+        }
+    
+        // Save or modify the review
+        book.reviews[username] = review;
+        res.send(`review with the username ${review} deleted.`);
+    });
 
 
 module.exports.authenticated = regd_users;

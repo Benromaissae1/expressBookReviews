@@ -20,8 +20,7 @@ public_users.post("/register", (req,res) => {
             return false;
         }
     }
-    
-    if (username && password) {
+if (username && password) {
         // Check if the user does not already exist
         if (!doesExist(username)) {
             // Add the new user to the users array
